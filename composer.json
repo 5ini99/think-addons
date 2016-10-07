@@ -1,0 +1,20 @@
+{
+    "name": "5ini99/think-addons",
+    "description": "addons package for thinkphp5",
+    "authors": [
+        {
+            "name": "xiaobo.sun",
+            "email": "xiaobo.sun@qq.com"
+        }
+    ],
+    "license": "Apache-2.0",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "think\\addons\\": "src/"
+        },
+        "files": [
+            "src/helper.php"
+        ]
+    }
+}

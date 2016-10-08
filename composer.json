@@ -2,6 +2,8 @@
     "name": "5ini99/think-addons",
     "description": "addons package for thinkphp5",
     "homepage": "https://github.com/5ini99/think-addons",
+    "license": "Apache-2.0",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "xiaobo.sun",
@@ -11,7 +13,6 @@
     "support": {
         "issues": "https://github.com/5ini99/think-addons/issues"
     },
-    "license": "Apache-2.0",
     "require": {
         "php": ">=5.4.0"
     },

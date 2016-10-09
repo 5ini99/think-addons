@@ -10,20 +10,18 @@
 // +----------------------------------------------------------------------
 namespace think\addons;
 
-\think\Loader::import('controller/Jump', TRAIT_PATH, EXT);
-
 use think\Config;
 use think\View;
 use think\Db;
 
 /**
- * 插件类
+ * 插件基类
+ * Class Addons
  * @author Byron Sampson <xiaobo.sun@qq.com>
+ * @package think\addons
  */
 abstract class Addons
 {
-    use \traits\controller\Jump;
-
     /**
      * 视图实例对象
      * @var view
@@ -47,10 +45,6 @@ abstract class Addons
     public $info = [];
     public $addons_path = '';
     public $config_file = '';
-    public $custom_config = '';
-    public $admin_list = [];
-    public $custom_adminlist = '';
-    public $access_url = [];
 
     /**
      * 架构函数

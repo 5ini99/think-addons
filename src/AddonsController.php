@@ -14,14 +14,11 @@ use think\Controller;
 
 /**
  * 插件执行默认控制器
- * Class Addons
- * @package app\common\controller
+ * Class AddonsController
+ * @package think\addons
  */
 class AddonsController extends Controller
 {
-    // 允许共公访问
-    protected $allow = ['*'];
-
     // 当前插件操作
     protected $addon = null;
     protected $controller = null;
@@ -32,9 +29,9 @@ class AddonsController extends Controller
      */
     public function _initialize()
     {
-        $this->addon        = ucfirst($this->request->get('_addon/s', ''));
-        $this->controller   = ucfirst($this->request->get('_controller/s', ''));
-        $this->action       = $this->request->get('_action/s', '');
+        $this->addon = ucfirst($this->request->get('_addon/s', ''));
+        $this->controller = ucfirst($this->request->get('_controller/s', ''));
+        $this->action = $this->request->get('_action/s', '');
     }
 
     /**
@@ -42,7 +39,7 @@ class AddonsController extends Controller
      */
     public function execute()
     {
-        if(!empty($this->addon) && !empty($this->controller) && !empty($this->action)){
+        if (!empty($this->addon) && !empty($this->controller) && !empty($this->action)) {
             // 获取类的命名空间
             $class = get_addon_class($this->addon, 'controller') . "\\{$this->controller}";
             $model = new $class();

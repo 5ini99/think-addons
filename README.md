@@ -155,16 +155,16 @@ hook('test', ['id'=>1])
 
 ```
 tp5
-- addons
--- test
---- controller
----- Action.php
---- config.php
---- info.html
---- Test.php
-- application
-- thinkphp
-- extend
-- vendor
-- public
+ - addons
+ -- test
+ --- controller
+ ---- Action.php
+ --- config.php
+ --- info.html
+ --- Test.php
+ - application
+ - thinkphp
+ - extend
+ - vendor
+ - public
 ```

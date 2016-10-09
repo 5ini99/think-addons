@@ -86,25 +86,21 @@ abstract class Addons
         }
         $map['name'] = $name;
         $map['status'] = 1;
-        $config = Db::name('Addons')->where($map)->value('config');
-        if ($config) {
-            $config = json_decode($config, true);
-        } else {
-            if (is_file($this->config_file)) {
-                $temp_arr = include $this->config_file;
-                foreach ($temp_arr as $key => $value) {
-                    if ($value['type'] == 'group') {
-                        foreach ($value['options'] as $gkey => $gvalue) {
-                            foreach ($gvalue['options'] as $ikey => $ivalue) {
-                                $config[$ikey] = $ivalue['value'];
-                            }
+        $config = [];
+        if (is_file($this->config_file)) {
+            $temp_arr = include $this->config_file;
+            foreach ($temp_arr as $key => $value) {
+                if ($value['type'] == 'group') {
+                    foreach ($value['options'] as $gkey => $gvalue) {
+                        foreach ($gvalue['options'] as $ikey => $ivalue) {
+                            $config[$ikey] = $ivalue['value'];
                         }
-                    } else {
-                        $config[$key] = $temp_arr[$key]['value'];
                     }
+                } else {
+                    $config[$key] = $temp_arr[$key]['value'];
                 }
-                unset($temp_arr);
             }
+            unset($temp_arr);
         }
         $_config[$name] = $config;
 

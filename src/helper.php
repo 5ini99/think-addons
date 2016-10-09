@@ -103,7 +103,7 @@ function get_addon_config($name)
 function addon_url($url, $param = [])
 {
     $url = parse_url($url);
-    $case = config('URL_CASE_INSENSITIVE');
+    $case = config('url_convert');
     $addons = $case ? parse_name($url['scheme']) : $url['scheme'];
     $controller = $case ? parse_name($url['host']) : $url['host'];
     $action = trim($case ? strtolower($url['path']) : $url['path'], '/');

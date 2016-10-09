@@ -11,6 +11,7 @@
 
 use think\Hook;
 use think\Config;
+use think\Loader;
 
 // 插件目录
 define('ADDON_PATH', ROOT_PATH . 'addons' . DS);
@@ -104,8 +105,8 @@ function addon_url($url, $param = [])
 {
     $url = parse_url($url);
     $case = config('url_convert');
-    $addons = $case ? parse_name($url['scheme']) : $url['scheme'];
-    $controller = $case ? parse_name($url['host']) : $url['host'];
+    $addons = $case ? Loader::parseName($url['scheme']) : $url['scheme'];
+    $controller = $case ? Loader::parseName($url['host']) : $url['host'];
     $action = trim($case ? strtolower($url['path']) : $url['path'], '/');
 
     /* 解析URL带的参数 */

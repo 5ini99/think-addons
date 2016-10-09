@@ -5,7 +5,7 @@ The ThinkPHP5 Addons Package
 > composer require 5ini99/think-addons
 
 ## 配置
-
+### 公共配置
 ```
 'addons'=>[
 	// 可以定义多个钩子
@@ -148,4 +148,23 @@ class Action
 
 ```
 hook('test', ['id'=>1])
+```
+
+## 插件目录结构
+### 最终生成的目录结构为
+
+```
+tp5
+- addons
+-- test
+--- controller
+---- Action.php
+--- config.php
+--- info.html
+--- Test.php
+- application
+- thinkphp
+- extend
+- vendor
+- public
 ```

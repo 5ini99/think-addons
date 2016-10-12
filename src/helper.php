@@ -30,7 +30,7 @@ if (!is_dir(ADDON_PATH)) {
 // 闭包初始化行为
 Hook::add('action_begin', function () {
     // 获取系统配置
-    $data = \think\Config::get('app_debug') ? [] : cache('hooks1');
+    $data = \think\Config::get('app_debug') ? [] : cache('hooks');
     if (empty($data)) {
         $addons = (array)Config::get('addons');
         foreach ($addons as $key => $values) {

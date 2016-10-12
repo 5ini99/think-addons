@@ -29,9 +29,9 @@ class AddonsController extends Controller
      */
     public function _initialize()
     {
-        $this->addon = ucfirst($this->request->get('_addon/s', ''));
-        $this->controller = ucfirst($this->request->get('_controller/s', ''));
-        $this->action = $this->request->get('_action/s', '');
+        $this->addon = ucfirst($this->request->param('_addon/s', ''));
+        $this->controller = ucfirst($this->request->param('_controller/s', ''));
+        $this->action = $this->request->param('_action/s', '');
     }
 
     /**

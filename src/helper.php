@@ -39,7 +39,7 @@ Hook::add('action_begin', function () {
             } else {
                 $values = (array)$values;
             }
-            $addons[$key] = array_map('get_addon_class', $values);
+            $addons[$key] = array_filter(array_map('get_addon_class', $values));
             \think\Hook::add($key, $addons[$key]);
         }
         cache('hooks', $addons);
@@ -70,13 +70,13 @@ function get_addon_class($name, $type = 'hook')
 {
     switch ($type) {
         case 'controller':
-            $namespace = "\\addons\\" . strtolower($name) . "\\controller";
+            $namespace = "\\addons\\" . strtolower($name) . "\\controller\\";
             break;
         default:
             $namespace = "\\addons\\" . strtolower($name) . "\\" . ucfirst(strtolower($name));
     }
 
-    return $namespace;
+    return class_exists($namespace) ? $namespace : '';
 }
 
 /**

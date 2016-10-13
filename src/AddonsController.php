@@ -10,8 +10,6 @@
 // +----------------------------------------------------------------------
 namespace think\addons;
 
-use think\Controller;
-
 /**
  * 插件执行默认控制器
  * Class AddonsController
@@ -19,24 +17,6 @@ use think\Controller;
  */
 class AddonsController extends Controller
 {
-    // 当前插件操作
-    protected $addon = null;
-    protected $controller = null;
-    protected $action = null;
-
-    /**
-     * 插件初始化
-     */
-    public function _initialize()
-    {
-        $route = $this->request->param('route', '');
-        $param = explode('-', $route);
-        // 格式化路由的插件位置
-        $this->action = array_pop($param);
-        $this->controller = ucfirst(array_pop($param));
-        $this->addon = array_pop($param);
-    }
-
     /**
      * 插件执行
      */

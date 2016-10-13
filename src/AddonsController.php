@@ -29,9 +29,13 @@ class AddonsController extends Controller
      */
     public function _initialize()
     {
-        $this->addon = ucfirst($this->request->param('_addon/s', ''));
-        $this->controller = ucfirst($this->request->param('_controller/s', ''));
-        $this->action = $this->request->param('_action/s', '');
+        $path = $this->request->pathinfo();
+        $route = pathinfo($path, PATHINFO_FILENAME);
+        $param = explode('-', $route);
+        // 格式化路由的插件位置
+        $this->action = array_pop($param);
+        $this->controller = ucfirst(array_pop($param));
+        $this->addon = array_pop($param);
     }
 
     /**
@@ -49,6 +53,7 @@ class AddonsController extends Controller
             // 调用操作
             return call_user_func([$model, $this->action]);
         }
+
         return $this->error(lang('addon cannot name or action'));
     }
 }

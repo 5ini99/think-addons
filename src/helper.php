@@ -115,13 +115,8 @@ function addon_url($url, $param = [])
         $param = array_merge($query, $param);
     }
 
-    /* 基础参数 */
-    $params = array(
-        '_addon' => $addons,
-        '_controller' => $controller,
-        '_action' => $action,
-    );
-    $params = array_merge($params, $param); //添加额外参数
+    // 生成插件链接新规则
+    $actions = "{$addons}-{$controller}-{$action}";
 
-    return url('@addons/execute', $params);
+    return url("addons/execute/{$actions}", $param);
 }

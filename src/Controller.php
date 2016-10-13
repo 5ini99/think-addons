@@ -27,6 +27,18 @@ class Controller extends \think\Controller
     protected $action = null;
     // 当前template
     protected $template;
+    // 模板配置信息
+    protected $config = [
+        'type' => 'Think',
+        'view_path' => '',
+        'view_suffix' => 'html',
+        'strip_space' => true,
+        'view_depr' => DS,
+        'tpl_begin' => '{',
+        'tpl_end' => '}',
+        'taglib_begin' => '{',
+        'taglib_end' => '}',
+    ];
 
     /**
      * 架构函数
@@ -37,7 +49,8 @@ class Controller extends \think\Controller
     {
         // 生成request对象
         $this->request = is_null($request) ? Request::instance() : $request;
-
+        // 初始化配置信息
+        $this->config = Config::get('template') ?? $this->config;
         // 处理路由参数
         $route = $this->request->param('route', '');
         $param = explode('-', $route);
@@ -47,7 +60,7 @@ class Controller extends \think\Controller
         $this->addon = array_pop($param);
 
         // 生成view_path
-        $view_path = Config::get('template.view_path') ? : 'view';
+        $view_path = $this->config['view_path'] ?: 'view';
 
         // 重置配置
         Config::set('template.view_path', ADDON_PATH . $this->addon . DS . $view_path . DS);
@@ -59,16 +72,16 @@ class Controller extends \think\Controller
      * 加载模板输出
      * @access protected
      * @param string $template 模板文件名
-     * @param array  $vars     模板输出变量
-     * @param array  $replace  模板替换
-     * @param array  $config   模板参数
+     * @param array $vars 模板输出变量
+     * @param array $replace 模板替换
+     * @param array $config 模板参数
      * @return mixed
      */
     protected function fetch($template = '', $vars = [], $replace = [], $config = [])
     {
         $controller = Loader::parseName($this->controller);
-        if ($controller && 0 !== strpos($template, '/')) {
-            $depr     = Config::get('template.view_depr');
+        if ('think' == strtolower($this->config['type']) && $controller && 0 !== strpos($template, '/')) {
+            $depr = $this->config['view_depr'];
             $template = str_replace(['/', ':'], $depr, $template);
             if ('' == $template) {
                 // 如果模板文件名为空 按照默认规则定位

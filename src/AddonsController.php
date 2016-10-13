@@ -29,8 +29,7 @@ class AddonsController extends Controller
      */
     public function _initialize()
     {
-        $path = $this->request->pathinfo();
-        $route = pathinfo($path, PATHINFO_FILENAME);
+        $route = $this->request->param('route', '');
         $param = explode('-', $route);
         // 格式化路由的插件位置
         $this->action = array_pop($param);

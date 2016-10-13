@@ -132,6 +132,23 @@ class Action
     }
 }
 ```
+> 如果需要使用view模板则需要继承`\think\addons\Controller`类
+> 模板文件所在位置为插件目录的view中，规则与模块中的view规则一致
+
+```
+<?php
+namespace addons\test\controller;
+
+use think\addons\Controller;
+
+class Action extends Controller
+{
+    public function link()
+    {
+        return $this->fetch();
+    }
+}
+```
 
 ## 使用钩子
 > 创建好插件后就可以在正常业务中使用该插件中的钩子了
@@ -140,14 +157,14 @@ class Action
 ### 模板中使用钩子
 
 ```
-<div>{:hook('test', ['id'=>1])}</div>
+<div>{:hook('testhook', ['id'=>1])}</div>
 ```
 
 ### php业务中使用
 > 只要是thinkphp5正常流程中的任意位置均可以使用
 
 ```
-hook('test', ['id'=>1])
+hook('testhook', ['id'=>1])
 ```
 
 ## 插件目录结构
@@ -159,6 +176,9 @@ tp5
  -- test
  --- controller
  ---- Action.php
+ --- view
+ ---- action
+ ----- link.html
  --- config.php
  --- info.html
  --- Test.php

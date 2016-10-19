@@ -50,7 +50,7 @@ class Controller extends \think\Controller
         // 生成request对象
         $this->request = is_null($request) ? Request::instance() : $request;
         // 初始化配置信息
-        $this->config = Config::get('template') ?? $this->config;
+        $this->config = Config::get('template') ?: $this->config;
         // 处理路由参数
         $route = $this->request->param('route', '');
         $param = explode('-', $route);

@@ -64,16 +64,19 @@ function hook($hook, $params = [])
  * 获取插件类的类名
  * @param $name 插件名
  * @param string $type 返回命名空间类型
+ * @param string $class 当前类名
  * @return string
  */
-function get_addon_class($name, $type = 'hook')
+function get_addon_class($name, $type = 'hook', $class = null)
 {
+    $name = \think\Loader::parseName($name);
+    $class = \think\Loader::parseName(is_null($class) ? $name : $class, 1);
     switch ($type) {
         case 'controller':
-            $namespace = "\\addons\\" . strtolower($name) . "\\controller\\";
+            $namespace = "\\addons\\" . $name . "\\controller\\" . $class;
             break;
         default:
-            $namespace = "\\addons\\" . strtolower($name) . "\\" . ucfirst(strtolower($name));
+            $namespace = "\\addons\\" . $name . "\\" . $class;
     }
 
     return class_exists($namespace) ? $namespace : '';
@@ -100,8 +103,8 @@ function get_addon_config($name)
  * @param $url
  * @param array $param
  * @return bool|string
- * @param bool|string   $suffix 生成的URL后缀
- * @param bool|string   $domain 域名
+ * @param bool|string $suffix 生成的URL后缀
+ * @param bool|string $domain 域名
  */
 function addon_url($url, $param = [], $suffix = true, $domain = false)
 {

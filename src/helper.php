@@ -17,7 +17,7 @@ use think\Loader;
 define('ADDON_PATH', ROOT_PATH . 'addons' . DS);
 
 // 定义路由
-\think\Route::get('addons/execute/:route', "\\think\\addons\\AddonsController@execute");
+\think\Route::any('addons/execute/:route', "\\think\\addons\\AddonsController@execute");
 
 // 如果插件目录不存在则创建
 if (!is_dir(ADDON_PATH)) {

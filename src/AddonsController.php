@@ -25,14 +25,17 @@ class AddonsController extends Controller
         if (!empty($this->addon) && !empty($this->controller) && !empty($this->action)) {
             // 获取类的命名空间
             $class = get_addon_class($this->addon, 'controller', $this->controller);
-            if(class_exists($class)) {
+            if (class_exists($class)) {
                 $model = new $class();
                 if ($model === false) {
                     $this->error(lang('addon init fail'));
                 }
                 // 调用操作
+                if (!method_exists($model, $this->action)) {
+                    $this->error(lang('Controller Class Method Not Exists'));
+                }
                 return call_user_func([$model, $this->action]);
-            }else{
+            } else {
                 $this->error(lang('Controller Class Not Exists'));
             }
         }

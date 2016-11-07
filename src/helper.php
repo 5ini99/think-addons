@@ -21,7 +21,7 @@ define('ADDON_PATH', ROOT_PATH . 'addons' . DS);
 
 // 如果插件目录不存在则创建
 if (!is_dir(ADDON_PATH)) {
-    mkdir(ADDON_PATH, 0777, true);
+    @mkdir(ADDON_PATH, 0777, true);
 }
 
 // 注册类的根命名空间

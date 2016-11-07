@@ -2,7 +2,7 @@
 The ThinkPHP5 Addons Package
 
 ## 安装
-> composer require 5ini99/think-addons
+> composer require 5ini99/think-addons:dev-master
 
 ## 配置
 ### 公共配置

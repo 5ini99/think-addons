@@ -10,6 +10,8 @@
 // +----------------------------------------------------------------------
 namespace think\addons;
 
+use think\Hook;
+
 /**
  * 插件执行默认控制器
  * Class AddonsController

@@ -28,17 +28,17 @@ class AddonsController extends Controller
             if (class_exists($class)) {
                 $model = new $class();
                 if ($model === false) {
-                    $this->error(lang('addon init fail'));
+                    abort(500, lang('addon init fail'));
                 }
                 // 调用操作
                 if (!method_exists($model, $this->action)) {
-                    $this->error(lang('Controller Class Method Not Exists'));
+                    abort(500, lang('Controller Class Method Not Exists'));
                 }
                 return call_user_func([$model, $this->action]);
             } else {
-                $this->error(lang('Controller Class Not Exists'));
+                abort(500, lang('Controller Class Not Exists'));
             }
         }
-        $this->error(lang('addon cannot name or action'));
+        abort(500, lang('addon cannot name or action'));
     }
 }

@@ -34,6 +34,8 @@ class AddonsController extends Controller
                 if (!method_exists($model, $this->action)) {
                     abort(500, lang('Controller Class Method Not Exists'));
                 }
+                // 监听addons_init
+                Hook::listen('addons_init', $this);
                 return call_user_func([$model, $this->action]);
             } else {
                 abort(500, lang('Controller Class Not Exists'));

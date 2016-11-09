@@ -54,10 +54,12 @@ class Controller extends \think\Controller
         // 处理路由参数
         $route = $this->request->param('route', '');
         $param = explode('-', $route);
+        // 是否自动转换控制器和操作名
+        $convert = \think\Config::get('url_convert');
         // 格式化路由的插件位置
-        $this->action = array_pop($param);
-        $this->controller = ucfirst(array_pop($param));
-        $this->addon = array_pop($param);
+        $this->action = $convert ? strtolower(array_pop($param)) : array_pop($param);
+        $this->controller = $convert ? strtolower(array_pop($param)) : array_pop($param);
+        $this->addon = $convert ? strtolower(array_pop($param)) : array_pop($param);
 
         // 生成view_path
         $view_path = $this->config['view_path'] ?: 'view';

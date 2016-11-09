@@ -70,7 +70,16 @@ function hook($hook, $params = [])
 function get_addon_class($name, $type = 'hook', $class = null)
 {
     $name = \think\Loader::parseName($name);
-    $class = \think\Loader::parseName(is_null($class) ? $name : $class, 1);
+    // 处理多级控制器情况
+    if (!is_null($class) && strpos($class, '.')) {
+        $class = explode('.', $class);
+        foreach ($class as $key => $cls) {
+            $class[$key] = \think\Loader::parseName($cls, 1);
+        }
+        $class = implode('\\', $class);
+    } else {
+        $class = \think\Loader::parseName(is_null($class) ? $name : $class, 1);
+    }
     switch ($type) {
         case 'controller':
             $namespace = "\\addons\\" . $name . "\\controller\\" . $class;

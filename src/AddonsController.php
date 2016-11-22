@@ -11,6 +11,7 @@
 namespace think\addons;
 
 use think\Hook;
+use think\Request;
 
 /**
  * 插件执行默认控制器
@@ -38,7 +39,7 @@ class AddonsController extends Controller
                 }
                 // 监听addons_init
                 Hook::listen('addons_init', $this);
-                return call_user_func([$model, $this->action]);
+                return call_user_func_array([$model, $this->action], [Request::instance()]);
             } else {
                 abort(500, lang('Controller Class Not Exists'));
             }

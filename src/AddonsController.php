@@ -10,8 +10,8 @@
 // +----------------------------------------------------------------------
 namespace think\addons;
 
-use think\Hook;
-use think\Request;
+use think\Config;
+use think\exception\HttpException;
 
 /**
  * 插件执行默认控制器
@@ -29,21 +29,32 @@ class AddonsController extends Controller
             // 获取类的命名空间
             $class = get_addon_class($this->addon, 'controller', $this->controller);
             if (class_exists($class)) {
-                $model = new $class();
-                if ($model === false) {
-                    abort(500, lang('addon init fail'));
-                }
-                // 调用操作
-                if (!method_exists($model, $this->action)) {
-                    abort(500, lang('Controller Class Method Not Exists'));
-                }
-                // 监听addons_init
-                Hook::listen('addons_init', $this);
-                return call_user_func_array([$model, $this->action], [Request::instance()]);
+                $instance = new $class();
             } else {
-                abort(500, lang('Controller Class Not Exists'));
+                // 查看是否有空控制器
+                $class = get_addon_class($this->addon, 'controller', Config::get('empty_controller'));
+                if (class_exists($class)) {
+                    $instance = new $class();
+                }
             }
+            // 如果不存在实例则直接抛出错误
+            if(!isset($instance)){
+                $this->error(lang('Controller Class Not Exists'));
+            }
+            // 检测要调用的方法是否存在
+            if (is_callable([$instance, $this->action])) {
+                // 执行操作方法
+                $call = [$instance, $this->action];
+            } elseif (is_callable([$instance, '_empty'])) {
+                // 空操作
+                $call = [$instance, '_empty'];
+            } else {
+                // 操作不存在
+                throw new HttpException(404, 'method not exists:' . get_class($instance) . '->' . $this->action . '()');
+            }
+            // 调用操作
+            return call_user_func($call);
         }
-        abort(500, lang('addon cannot name or action'));
+        $this->error(lang('addon cannot name or action'));
     }
 }

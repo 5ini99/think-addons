@@ -11,6 +11,7 @@
 namespace think\addons;
 
 use think\Config;
+use think\Request;
 use think\exception\HttpException;
 
 /**
@@ -53,7 +54,15 @@ class AddonsController extends Controller
                 throw new HttpException(404, 'method not exists:' . get_class($instance) . '->' . $this->action . '()');
             }
             // 初始化插件中的模块/控制器/方法
-            $this->request->module($this->addon);
+            Request::hook('addon', function(Request $request, $addon = null){
+                if (!is_null($addon)) {
+                    $request->addon = $addon;
+                    return $request;
+                } else {
+                    return $request->addon ?: '';
+                }
+            });
+            $this->request->addon($this->addon);
             $this->request->controller($this->controller);
             $this->request->action($this->action);
             // 调用操作

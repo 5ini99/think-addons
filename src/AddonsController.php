@@ -52,8 +52,12 @@ class AddonsController extends Controller
                 // 操作不存在
                 throw new HttpException(404, 'method not exists:' . get_class($instance) . '->' . $this->action . '()');
             }
+            // 初始化插件中的模块/控制器/方法
+            $this->request->module($this->addon);
+            $this->request->controller($this->controller);
+            $this->request->action($this->action);
             // 调用操作
-            return call_user_func($call);
+            return call_user_func_array($call, [$this->request]);
         }
         $this->error(lang('addon cannot name or action'));
     }

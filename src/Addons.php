@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: Byron Sampson <xiaobo.sun@qq.com>
 // +----------------------------------------------------------------------
-namespace think\addons;
+namespace think;
 
 use think\Config;
 use think\View;

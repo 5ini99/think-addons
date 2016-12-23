@@ -5,9 +5,10 @@ The ThinkPHP5 Addons Package
 > composer require 5ini99/think-addons
 
 ## 配置
+> 配置文件位于 application/extra/addons.php
 ### 公共配置
 ```
-'addons'=>[
+return [
 	// 可以定义多个钩子
     'testhook'=>'test' // 键为钩子名称，用于在业务中自定义钩子处理，值为实现该钩子的插件，
 					// 多个插件可以用数组也可以用逗号分割
@@ -31,7 +32,7 @@ The ThinkPHP5 Addons Package
 <?php
 namespace addons\test;	// 注意命名空间规范
 
-use think\addons\Addons;
+use think\Addons;
 
 /**
  * 插件测试
@@ -188,3 +189,12 @@ tp5
  - vendor
  - public
 ```
+
+
+<font color=red>升级注意事项：</font>
+
+> addons `1.2.0`升`1.3.0`时需要将原插件继承的 `\think\addons\Addons` 修改为 `\think\Addons` 即可
+
+如果有其它问题可加QQ群 438811382 进行讨论
+
+点击链接加入群【<a href="https://jq.qq.com/?_wv=1027&k=42nNACM">Web开发兴趣小组</a>】：<a href="https://jq.qq.com/?_wv=1027&k=42nNACM">https://jq.qq.com/?_wv=1027&k=42nNACM</a>

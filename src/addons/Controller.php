@@ -47,7 +47,6 @@ class Controller extends \think\Controller
      */
     public function __construct(Request $request = null)
     {
-        parent::__construct($request);
         // 生成request对象
         $this->request = is_null($request) ? Request::instance() : $request;
         // 初始化配置信息
@@ -64,9 +63,11 @@ class Controller extends \think\Controller
 
         // 生成view_path
         $view_path = $this->config['view_path'] ?: 'view';
+
         // 重置配置
-        $this->request->module('');
-        $this->view = $this->view->config('view_base', ADDON_PATH . $this->addon . DS . $view_path . DS);
+        Config::set('template.view_path', ADDON_PATH . $this->addon . DS . $view_path . DS);
+
+        parent::__construct($request);
     }
 
     /**

@@ -17,7 +17,7 @@ use think\Loader;
 define('ADDON_PATH', ROOT_PATH . 'addons' . DS);
 
 // 定义路由
-\think\Route::any('addons/execute/:route', "\\think\\addons\\AddonsController@execute");
+\think\Route::any('addons/execute/:route', "\\think\\addons\\Route@execute");
 
 // 如果插件目录不存在则创建
 if (!is_dir(ADDON_PATH)) {
@@ -31,8 +31,9 @@ if (!is_dir(ADDON_PATH)) {
 Hook::add('action_begin', function () {
     // 获取系统配置
     $data = \think\Config::get('app_debug') ? [] : cache('hooks');
+    $addons = (array)Config::get('addons');
     if (empty($data)) {
-        $addons = (array)Config::get('addons');
+        // 初始化钩子
         foreach ($addons as $key => $values) {
             if (is_string($values)) {
                 $values = explode(',', $values);

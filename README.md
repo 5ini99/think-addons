@@ -13,6 +13,15 @@ The ThinkPHP5 Addons Package
 					// 多个插件可以用数组也可以用逗号分割
 ]
 ```
+或者在application\extra目录中新建`addons.php`,内容为：
+```
+<?php
+return [
+	// 可以定义多个钩子
+    'testhook'=>'test' // 键为钩子名称，用于在业务中自定义钩子处理，值为实现该钩子的插件，
+					// 多个插件可以用数组也可以用逗号分割
+]
+```
 
 ## 创建插件
 > 创建的插件可以在view视图中使用，也可以在php业务中使用
@@ -31,7 +40,7 @@ The ThinkPHP5 Addons Package
 <?php
 namespace addons\test;	// 注意命名空间规范
 
-use think\addons\Addons;
+use think\Addons;
 
 /**
  * 插件测试

@@ -9,15 +9,18 @@
 // | Author: Byron Sampson <xiaobo.sun@qq.com>
 // +----------------------------------------------------------------------
 
+use think\App;
 use think\Hook;
 use think\Config;
 use think\Loader;
+use think\Cache;
+use think\Route;
 
 // 插件目录
 define('ADDON_PATH', ROOT_PATH . 'addons' . DS);
 
 // 定义路由
-\think\Route::any('addons/execute/:route', "\\think\\addons\\Route@execute");
+Route::any('addons/execute/:route', "\\think\\addons\\Route@execute");
 
 // 如果插件目录不存在则创建
 if (!is_dir(ADDON_PATH)) {
@@ -25,13 +28,52 @@ if (!is_dir(ADDON_PATH)) {
 }
 
 // 注册类的根命名空间
-\think\Loader::addNamespace('addons', ADDON_PATH);
+Loader::addNamespace('addons', ADDON_PATH);
+
+// 闭包自动识别插件目录配置
+Hook::add('app_init', function () {
+    // 获取开关
+    $autoload = (bool)Config::get('addons.autoload', false);
+    // 非正是返回
+    if (!$autoload) {
+        return;
+    }
+    // 当debug时不缓存配置
+    $config = App::$debug ? [] : Cache::get('addons', []);
+    if (empty($config)) {
+        // 读取addons的配置
+        $config = (array)Config::get('addons');
+        // 读取插件目录及钩子列表
+        $base = get_class_methods("\\think\\Addons");
+        foreach (glob(ADDON_PATH . '*/*.php') as $addons_file) {
+            $info = pathinfo($addons_file);
+            $name = pathinfo($info['dirname'], PATHINFO_FILENAME);
+            if (strtolower($info['filename']) == strtolower($name)) {
+                $methods = (array)get_class_methods("\\addons\\" . $name . "\\" . $info['filename']);
+                $hooks = array_diff($methods, $base);
+                foreach ($hooks as $hook) {
+                    if (!isset($config['hooks'][$hook])) {
+                        $config['hooks'][$hook] = [];
+                    }
+                    if (is_string($config['hooks'][$hook])) {
+                        $config['hooks'][$hook] = explode(',', $config['hooks'][$hook]);
+                    }
+                    if (!in_array($name, $config['hooks'][$hook])) {
+                        $config['hooks'][$hook][] = $name;
+                    }
+                }
+            }
+        }
+        Cache::set('addons', $config);
+    }
+    Config::set('addons', $config);
+});
 
 // 闭包初始化行为
 Hook::add('action_begin', function () {
     // 获取系统配置
-    $data = \think\Config::get('app_debug') ? [] : cache('hooks');
-    $addons = (array)Config::get('addons');
+    $data = App::$debug ? [] : Cache::get('hooks', []);
+    $addons = (array)Config::get('addons.hooks');
     if (empty($data)) {
         // 初始化钩子
         foreach ($addons as $key => $values) {
@@ -41,14 +83,13 @@ Hook::add('action_begin', function () {
                 $values = (array)$values;
             }
             $addons[$key] = array_filter(array_map('get_addon_class', $values));
-            \think\Hook::add($key, $addons[$key]);
+            Hook::add($key, $addons[$key]);
         }
-        cache('hooks', $addons);
+        Cache::set('hooks', $addons);
     } else {
         Hook::import($data, false);
     }
 });
-
 
 /**
  * 处理插件钩子
@@ -58,7 +99,7 @@ Hook::add('action_begin', function () {
  */
 function hook($hook, $params = [])
 {
-    \think\Hook::listen($hook, $params);
+    Hook::listen($hook, $params);
 }
 
 /**
@@ -70,16 +111,16 @@ function hook($hook, $params = [])
  */
 function get_addon_class($name, $type = 'hook', $class = null)
 {
-    $name = \think\Loader::parseName($name);
+    $name = Loader::parseName($name);
     // 处理多级控制器情况
     if (!is_null($class) && strpos($class, '.')) {
         $class = explode('.', $class);
         foreach ($class as $key => $cls) {
-            $class[$key] = \think\Loader::parseName($cls, 1);
+            $class[$key] = Loader::parseName($cls, 1);
         }
         $class = implode('\\', $class);
     } else {
-        $class = \think\Loader::parseName(is_null($class) ? $name : $class, 1);
+        $class = Loader::parseName(is_null($class) ? $name : $class, 1);
     }
     switch ($type) {
         case 'controller':

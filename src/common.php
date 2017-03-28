@@ -45,16 +45,24 @@ Hook::add('app_init', function () {
         $config = (array)Config::get('addons');
         // 读取插件目录及钩子列表
         $base = get_class_methods("\\think\\Addons");
+        // 读取插件目录中的php文件
         foreach (glob(ADDON_PATH . '*/*.php') as $addons_file) {
+            // 格式化路径信息
             $info = pathinfo($addons_file);
+            // 获取插件目录名
             $name = pathinfo($info['dirname'], PATHINFO_FILENAME);
+            // 找到插件入口文件
             if (strtolower($info['filename']) == strtolower($name)) {
+                // 读取出所有公共方法
                 $methods = (array)get_class_methods("\\addons\\" . $name . "\\" . $info['filename']);
+                // 跟插件基类方法做比对，得到差异结果
                 $hooks = array_diff($methods, $base);
+                // 循环将钩子方法写入配置中
                 foreach ($hooks as $hook) {
                     if (!isset($config['hooks'][$hook])) {
                         $config['hooks'][$hook] = [];
                     }
+                    // 兼容手动配置项
                     if (is_string($config['hooks'][$hook])) {
                         $config['hooks'][$hook] = explode(',', $config['hooks'][$hook]);
                     }
